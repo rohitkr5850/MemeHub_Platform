@@ -42,15 +42,15 @@ app.use('/api/ai', aiRoutes);
 
 // Static files for production
 if (process.env.NODE_ENV === 'production') {
-  app.use(express.static(path.join(__dirname, '../dist')));
-  app.get('*', (req, res) => {
-    res.sendFile(path.resolve(__dirname, '../dist', 'index.html'));
-  });
+  app.use(express.static(path.join(__dirname, '../src/dist')));
+app.get('*', (req, res) => {
+  res.sendFile(path.resolve(__dirname, '../src/dist', 'index.html'));
+});
 }
 
 // Connect to MongoDB and start server
 mongoose
-  .connect(process.env.MONGODB_URI || 'mongodb://localhost:27017/memehub')
+  .connect(process.env.MONGODB_URI || 'mongodb+srv://memehub:uWtyjFlpRJJAZajg@cluster0.iow4is3.mongodb.net/?retryWrites=true&w=majority&appName=Cluster0')
   .then(() => {
     console.log('Connected to MongoDB');
     app.listen(PORT, () => {
