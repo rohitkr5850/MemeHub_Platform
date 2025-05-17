@@ -1,0 +1,6 @@
+import{c as t,j as e,m as a,b as s,h as i}from"./index-BeMRu7EZ.js";/**
+ * @license lucide-react v0.344.0 - ISC
+ *
+ * This source code is licensed under the ISC license.
+ * See the LICENSE file in the root directory of this source tree.
+ */const o=t("ArrowLeft",[["path",{d:"m12 19-7-7 7-7",key:"1l729n"}],["path",{d:"M19 12H5",key:"x3x0zl"}]]),m=()=>e.jsx("div",{className:"max-w-md mx-auto text-center py-12",children:e.jsxs(a.div,{initial:{opacity:0,scale:.8},animate:{opacity:1,scale:1},transition:{duration:.5},className:"bg-base-100 p-8 rounded-lg shadow-lg",children:[e.jsxs("div",{className:"mb-6",children:[e.jsx(s,{className:"w-24 h-24 mx-auto text-neutral-400"}),e.jsx("h1",{className:"text-3xl font-bold mt-4",children:"404 - Page Not Found"}),e.jsx("p",{className:"mt-2 text-lg",children:"The meme you're looking for has vanished into the internet void."})]}),e.jsx("div",{className:"mt-8",children:e.jsxs(i,{to:"/",className:"inline-flex items-center px-4 py-2 bg-primary-500 text-white rounded-md hover:bg-primary-600 transition-colors",children:[e.jsx(o,{size:18,className:"mr-2"}),"Back to Homepage"]})}),e.jsx("p",{className:"mt-6 text-sm text-gray-500",children:"Or maybe create a meme about this 404 page? Just a thought..."})]})});export{m as default};
