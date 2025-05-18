@@ -1,5 +1,5 @@
 // API URL - Change this when deploying
-export const API_URL = 'http://localhost:5000';
+export const API_URL = 'https://memehub-platform.onrender.com';
 
 // Meme Categories
 export const MEME_CATEGORIES = [
