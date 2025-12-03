@@ -62,7 +62,7 @@ router.get('/', async (req, res) => {
       sortCriteria = { upvotes: -1, createdAt: -1 };
     }
 
-    // Get total count for pagination
+    // Get total count ;= pagination
     const totalCount = await Meme.countDocuments(filterCriteria);
 
     // Fetch memes
@@ -152,7 +152,6 @@ router.post('/', auth, async (req, res) => {
     }
 
     // Upload image to Cloudinary
-    // For demo purposes, we'll use a placeholder if no Cloudinary config
     let imageUrl;
     if (process.env.CLOUDINARY_CLOUD_NAME && process.env.CLOUDINARY_CLOUD_NAME !== 'demo') {
       const uploadResponse = await cloudinary.uploader.upload(imageData, {
@@ -388,12 +387,12 @@ router.delete('/:id', auth, async (req, res) => {
       return res.status(404).json({ message: 'Meme not found' });
     }
 
-    // Check if user is the creator
+    // Check (user is the creator) 
     if (meme.creator.toString() !== userId) {
       return res.status(403).json({ message: 'Not authorized to delete this meme' });
     }
 
-    // Delete from Cloudinary if applicable
+    // Delete from Cloudinary
     if (
       process.env.CLOUDINARY_CLOUD_NAME &&
       process.env.CLOUDINARY_CLOUD_NAME !== 'demo' &&

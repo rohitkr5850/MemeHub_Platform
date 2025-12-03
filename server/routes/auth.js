@@ -1,96 +1,106 @@
-import express from 'express';
-import bcrypt from 'bcryptjs';
-import jwt from 'jsonwebtoken';
-import User from '../models/User.js';
+import express from "express";
+import bcrypt from "bcryptjs";
+import jwt from "jsonwebtoken";
+import User from "../models/User.js";
+import { OAuth2Client } from "google-auth-library";
 
 const router = express.Router();
+const googleClient = new OAuth2Client(process.env.GOOGLE_CLIENT_ID);
 
-// Register a new user
-router.post('/register', async (req, res) => {
+// Register
+router.post("/register", async (req, res) => {
   try {
     const { username, email, password } = req.body;
 
-    // Check if email or username already exists
     const emailExists = await User.findOne({ email });
-    if (emailExists) {
-      return res.status(400).json({ message: 'Email already in use' });
-    }
+    if (emailExists) return res.status(400).json({ message: "Email already in use" });
 
     const usernameExists = await User.findOne({ username });
-    if (usernameExists) {
-      return res.status(400).json({ message: 'Username already taken' });
-    }
+    if (usernameExists) return res.status(400).json({ message: "Username already taken" });
 
-    // Hash password
-    const salt = await bcrypt.genSalt(10);
-    const hashedPassword = await bcrypt.hash(password, salt);
+    const hashedPassword = await bcrypt.hash(password, 10);
 
-    // Create new user
-    const newUser = new User({
-      username,
-      email,
-      password: hashedPassword,
-    });
-
-    // Save user
+    const newUser = new User({ username, email, password: hashedPassword });
     const savedUser = await newUser.save();
 
-    // Create JWT token
     const token = jwt.sign(
-      { userId: savedUser._id, username: savedUser.username, email: savedUser.email },
-      process.env.JWT_SECRET || 'memehub_jwt_secret',
-      { expiresIn: '7d' }
+      { userId: savedUser._id, email: savedUser.email, username: savedUser.username },
+      process.env.JWT_SECRET,
+      { expiresIn: "7d" }
     );
 
-    // Return user data (excluding password) and token
     const { password: _, ...userData } = savedUser._doc;
 
-    res.status(201).json({
-      message: 'User registered successfully',
-      token,
-      user: userData,
-    });
-  } catch (error) {
-    console.error('Registration error:', error);
-    res.status(500).json({ message: 'Server error during registration' });
+    res.status(201).json({ message: "User registered", token, user: userData });
+  } catch (err) {
+    console.error("Registration error:", err);
+    res.status(500).json({ message: "Server error during registration" });
   }
 });
 
-// Login user
-router.post('/login', async (req, res) => {
+// Login
+router.post("/login", async (req, res) => {
   try {
     const { email, password } = req.body;
 
-    // Check if user exists
     const user = await User.findOne({ email });
-    if (!user) {
-      return res.status(400).json({ message: 'Invalid email or password' });
-    }
+    if (!user) return res.status(400).json({ message: "Invalid email or password" });
 
-    // Check password
     const validPassword = await bcrypt.compare(password, user.password);
-    if (!validPassword) {
-      return res.status(400).json({ message: 'Invalid email or password' });
-    }
+    if (!validPassword) return res.status(400).json({ message: "Invalid email or password" });
 
-    // Create JWT token
     const token = jwt.sign(
-      { userId: user._id, username: user.username, email: user.email },
-      process.env.JWT_SECRET || 'memehub_jwt_secret',
-      { expiresIn: '7d' }
+      { userId: user._id, email: user.email, username: user.username },
+      process.env.JWT_SECRET,
+      { expiresIn: "7d" }
     );
 
-    // Return user data (excluding password) and token
     const { password: _, ...userData } = user._doc;
 
-    res.status(200).json({
-      message: 'Logged in successfully',
-      token,
-      user: userData,
+    res.json({ message: "Login successful", token, user: userData });
+  } catch (err) {
+    console.error("Login error:", err);
+    res.status(500).json({ message: "Server error during login" });
+  }
+});
+
+// G-Login
+router.post("/google", async (req, res) => {
+  try {
+    const { token } = req.body;
+
+    // Verify Google token
+    const ticket = await googleClient.verifyIdToken({
+      idToken: token,
+      audience: process.env.GOOGLE_CLIENT_ID,
     });
-  } catch (error) {
-    console.error('Login error:', error);
-    res.status(500).json({ message: 'Server error during login' });
+
+    const payload = ticket.getPayload();
+    const { email, name, picture } = payload;
+
+    let user = await User.findOne({ email });
+
+    // Create new user if does not exist
+    if (!user) {
+      user = await User.create({
+        username: name.replace(/\s+/g, "").toLowerCase(),
+        email,
+        profilePicture: picture,
+        password: "GOOGLE_USER_NO_PASSWORD",
+      });
+    }
+
+    // Create JWT
+    const jwtToken = jwt.sign(
+      { userId: user._id, email: user.email, username: user.username },
+      process.env.JWT_SECRET,
+      { expiresIn: "7d" }
+    );
+
+    res.json({ message: "Google login successful", token: jwtToken, user });
+  } catch (err) {
+    console.error("Google login error:", err);
+    res.status(400).json({ message: "Google login failed" });
   }
 });
 

@@ -48,7 +48,7 @@ const memeSchema = new mongoose.Schema(
           type: String,
           required: true,
           trim: true,
-          maxlength: 140, // Character limit for comments
+          maxlength: 140, 
         },
         createdAt: {
           type: Date,
@@ -64,13 +64,13 @@ const memeSchema = new mongoose.Schema(
   { timestamps: true }
 );
 
-// Index for faster querying
+// Index := faster querying
 memeSchema.index({ createdAt: -1 });
 memeSchema.index({ upvotes: -1 });
 memeSchema.index({ tags: 1 });
 memeSchema.index({ creator: 1 });
 
-// Virtual for score (upvotes - downvotes)
+// Virtual for score upvotes - downvotes
 memeSchema.virtual('score').get(function () {
   return this.upvotes - this.downvotes;
 });

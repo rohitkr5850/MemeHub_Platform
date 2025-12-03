@@ -2,14 +2,20 @@ import mongoose from 'mongoose';
 
 const userSchema = new mongoose.Schema(
   {
+    googleId: {
+      type: String,
+      default: null,  
+    },
+
     username: {
       type: String,
-      required: true,
+      required: false,         
       unique: true,
       trim: true,
       minlength: 3,
       maxlength: 20,
     },
+
     email: {
       type: String,
       required: true,
@@ -17,32 +23,44 @@ const userSchema = new mongoose.Schema(
       trim: true,
       lowercase: true,
     },
+
     password: {
       type: String,
-      required: true,
+      required: false,          // Google users do NOT have password
       minlength: 6,
     },
+
     profilePicture: {
       type: String,
       default: '',
     },
+
     bio: {
       type: String,
       maxlength: 160,
       default: '',
     },
+
     badges: [
       {
         type: String,
-        enum: ['first_upload', 'viral_post', 'comment_king', 'prolific_creator', 'weekly_winner'],
+        enum: [
+          'first_upload',
+          'viral_post',
+          'comment_king',
+          'prolific_creator',
+          'weekly_winner',
+        ],
       },
     ],
+
     upvotedMemes: [
       {
         type: mongoose.Schema.Types.ObjectId,
         ref: 'Meme',
       },
     ],
+
     downvotedMemes: [
       {
         type: mongoose.Schema.Types.ObjectId,
@@ -53,7 +71,7 @@ const userSchema = new mongoose.Schema(
   { timestamps: true }
 );
 
-// Virtual for total memes created
+// Virtual: Total memes created
 userSchema.virtual('memesCount', {
   ref: 'Meme',
   localField: '_id',
@@ -61,7 +79,7 @@ userSchema.virtual('memesCount', {
   count: true,
 });
 
-// Virtual for total upvotes received
+// Virtual: Total upvotes
 userSchema.virtual('totalUpvotes', {
   ref: 'Meme',
   localField: '_id',
@@ -76,7 +94,7 @@ userSchema.virtual('totalUpvotes', {
   ],
 });
 
-// Virtual for total comments received
+// Virtual: Total comments
 userSchema.virtual('totalComments', {
   ref: 'Meme',
   localField: '_id',
@@ -99,12 +117,12 @@ userSchema.virtual('totalComments', {
   ],
 });
 
-// Method to check if user has a specific badge
+// Method: Check badge
 userSchema.methods.hasBadge = function (badgeName) {
   return this.badges.includes(badgeName);
 };
 
-// Method to add a badge if not already present
+// Method: Add badge
 userSchema.methods.addBadge = async function (badgeName) {
   if (!this.badges.includes(badgeName)) {
     this.badges.push(badgeName);

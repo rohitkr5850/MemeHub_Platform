@@ -13,7 +13,7 @@ const auth = (req, res, next) => {
     // Verify token
     const decoded = jwt.verify(token, process.env.JWT_SECRET || 'memehub_jwt_secret');
     
-    // Add user from payload
+    // Add user -payload
     req.user = decoded;
     next();
   } catch (error) {
