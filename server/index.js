@@ -30,7 +30,7 @@ app.use(
   cors({
     origin: [
       "http://localhost:5173",              
-      "https://meme-hub-platform-zorq.vercel.app/", 
+      "https://meme-hub-platform-zorq.vercel.app", 
     ],
     credentials: true,
   })
