@@ -18,12 +18,13 @@ MemeHub is a full-stack meme sharing platform where users can create, share, and
 ## 🛠️ Tech Stack
 
 ### Frontend
-- React.js with TypeScript
+- React.js with Vite
 - React Router for navigation
 - Tailwind CSS for styling
 - Framer Motion for animations
 - Recharts for data visualization
 - Lucide React for icons
+- react-oauth/google (Google OAuth client)
 
 ### Backend
 - Node.js with Express
@@ -31,7 +32,9 @@ MemeHub is a full-stack meme sharing platform where users can create, share, and
 - Mongoose for object modeling
 - JWT for authentication
 - Cloudinary for image storage
+- Rate limiting, input validation, and basic protections (CORS, helmet)
 - RESTful API architecture
+- Google Oauth for login
 
 ## 🚀 Installation and Setup
 
@@ -39,6 +42,7 @@ MemeHub is a full-stack meme sharing platform where users can create, share, and
 - Node.js (v14 or higher)
 - MongoDB (local or Atlas)
 - Cloudinary account (for image uploads)
+- Google Cloud Console project for OAuth credentials (OAuth 2.0 Client ID)
 
 ### Frontend Setup
 
@@ -46,3 +50,27 @@ MemeHub is a full-stack meme sharing platform where users can create, share, and
    ```bash
    git clone https://github.com/yourusername/memehub.git
    cd memehub
+2. install client deps
+   cd ../client
+   npm install
+   cd client
+   npm run dev
+
+### Backend Setup
+
+3. install server deps
+   cd ../server
+   npm install
+   cd server
+   npm run dev
+
+###🧑‍💻 Contribute
+
+Fork the repo → create a feature branch → open a PR.
+
+Keep PRs small and focused; add unit/integration tests where possible.
+
+###🧾 License
+
+MIT License — feel free to reuse and adapt.
+
