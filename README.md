@@ -1,6 +1,5 @@
 # MemeHub - The Internet's Playground for Memes
 
-![MemeHub Logo](https://via.placeholder.com/1200x600?text=MemeHub+-+The+Internet's+Playground+for+Memes)
 
 MemeHub is a full-stack meme sharing platform where users can create, share, and track viral memes. It provides a comprehensive ecosystem for meme enthusiasts to showcase their creativity, engage with other creators, and compete for recognition on the leaderboard.
 
