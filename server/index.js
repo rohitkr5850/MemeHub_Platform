@@ -37,6 +37,10 @@ app.use(
 );
 
 // ===== ROUTES =====
+app.get("/", (req, res) => {
+  res.status(200).json({ status: "OK", message: "MemeHub backend running" });
+});
+
 app.get("/test", (req, res) => {
   res.send("Backend working!");
 });
